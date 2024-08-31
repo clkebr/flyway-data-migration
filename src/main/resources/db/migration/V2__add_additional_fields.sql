@@ -1,7 +1,0 @@
-ALTER TABLE users
-    ADD COLUMN phone_number VARCHAR(20);
-
-ALTER TABLE users
-    ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT TRUE;
-
-INSERT INTO roles (role_name) VALUES ('USER'), ('ADMIN');
