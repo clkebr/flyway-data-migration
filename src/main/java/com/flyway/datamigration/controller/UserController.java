@@ -29,8 +29,14 @@ public class UserController {
 	}
 
 	@PostMapping
-	public User createUser(@RequestBody User user){
-		return userservice.save(user);
+	public ResponseEntity<User> createUser(@RequestBody User user){
+		try {
+			User createdUser = userservice.save(user);
+			return ResponseEntity.ok(createdUser);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(null);
+		}
+
 	}
 
 	@DeleteMapping("/{id}")

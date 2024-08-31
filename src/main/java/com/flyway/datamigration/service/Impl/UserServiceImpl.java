@@ -19,6 +19,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User save(User object) {
+		Optional<User> userName = userRepository.findUsersByUserName(object.getUserName());
+		Optional<User> email = userRepository.findUserByEmail(object.getEmail());
+
+		if( userName.isPresent() || email.isPresent()) throw new IllegalArgumentException("User with username or email " + object + " already exists.");
+
+
 		return userRepository.save(object);
 
 	}

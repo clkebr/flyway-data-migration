@@ -19,6 +19,8 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public Role save(Role object) {
+		Optional<Role> role = roleRepository.findByRoleName(object.getRoleName());
+		if(role.isPresent())   throw new IllegalArgumentException("Role with name " + object.getRoleName() + " already exists.");
 		return roleRepository.save(object);
 	}
 
@@ -41,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public void update(Role object) {
 		Optional<Role> byId = roleRepository.findById(object.getId());
-		if (byId.isPresent()) roleRepository.save(object);
+		if (byId.isPresent()) this.save(object);
 
 	}
 }

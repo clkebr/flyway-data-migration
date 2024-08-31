@@ -3,19 +3,12 @@ package com.flyway.datamigration.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter @Setter
 @ToString
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public class BaseEntity {
 
@@ -24,19 +17,15 @@ public class BaseEntity {
 	private Long id;
 
 	@Column(nullable = false,updatable = false)
-	@CreatedDate
 	public LocalDateTime createdAt;
 
 	@Column(nullable = false,updatable = false)
-	@CreatedBy
 	public Long insertUserId;
 
 	@Column(nullable = false)
-	@LastModifiedDate
 	public LocalDateTime updatedAt;
 
 	@Column(nullable = false)
-	@LastModifiedBy
 	public Long lastUpdateUserId;
 
 	private Boolean isDeleted = false;
@@ -52,5 +41,19 @@ public class BaseEntity {
 	@Override
 	public int hashCode() {
 		return getClass().hashCode();
+	}
+
+	@PrePersist
+	public void onPrePersist() {
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
+		this.insertUserId = 1L;
+		this.lastUpdateUserId = 1L;
+	}
+
+	@PreUpdate
+	public void onPreUpdate() {
+		this.updatedAt = LocalDateTime.now();
+		this.lastUpdateUserId = 1L;
 	}
 }
